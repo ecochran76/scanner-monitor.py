@@ -30,7 +30,7 @@ else:
 
 # Get the directory where the script is stored
 script_dir = os.path.dirname(os.path.abspath(__file__))
-log_file = os.path.join(script_dir, "scanner_monitor.log")
+log_file = os.path.join(script_dir, f"scanner_monitor_{hostname}.log")
 processed_files_file = os.path.join(script_dir, f"processed_files_{hostname}.json")
 
 # Configure logging
@@ -49,13 +49,13 @@ else:
 
 class FileHandler(FileSystemEventHandler):
     def on_created(self, event):
-        if event.is_directory or event.src_path.endswith('.tmp'):
+        if event.is_directory or not event.src_path.endswith('.pdf'):
             return
         else:
             process_file(event.src_path)
 
     def on_moved(self, event):
-        if event.is_directory or event.dest_path.endswith('.tmp'):
+        if event.is_directory or not event.dest_path.endswith('.pdf'):
             return
         else:
             process_file(event.dest_path)
@@ -65,7 +65,7 @@ def save_processed_files():
         json.dump(list(processed_files), f)
 
 def process_file(filepath):
-    if filepath in processed_files or filepath.endswith('.tmp'):
+    if filepath in processed_files or not filepath.endswith('.pdf'):
         return
 
     retries = 3
@@ -106,8 +106,8 @@ if __name__ == "__main__":
     
     try:
         while True:
-            scan_directory()
-            time.sleep(60)  # Periodic scan every 60 seconds
+            # scan_directory()
+            time.sleep(1)  # Periodic scan every 60 seconds
     except KeyboardInterrupt:
         logging.info("Stopping the file monitor script")
         observer.stop()
