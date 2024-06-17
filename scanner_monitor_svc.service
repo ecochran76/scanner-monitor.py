@@ -1,0 +1,12 @@
+[Unit]
+Description=Scanner to Hot Folder Service
+
+[Service]
+ExecStart=/home/ecochran76/python3/bin/python3 /mnt/data2024/syncthing/workspace/scanner-monitor.py/scanner-monitor.py
+Restart=always
+User=www-data
+Group=docker
+WorkingDirectory=/mnt/data2024/syncthing/workspace/scanner-monitor.py
+
+[Install]
+WantedBy=multi-user.target
